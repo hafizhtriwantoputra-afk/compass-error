@@ -120,7 +120,7 @@ table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
         <label>Object long (decimal °)<input id="cLon" type="number" step="0.00001" placeholder="103.93272"></label>
         <label class="full">Object name<input id="cName" type="text" placeholder="name on chart"></label>
       </div>
-      <label class="full">Obs. gyro bearing to object (°)<input id="obs" type="number" step="0.1" value="315.8"></label>
+      <label class="full">Obs. gyro bearing to object (°)<input id="obs" type="number" step="0.1" placeholder="read from azimuth circle"></label>
     </div>
 
     <details>
@@ -172,10 +172,64 @@ table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
 
 <script>
 const OBJECTS=[
-  {id:"bedokLh",name:"Bedok Lighthouse",lat:1+18.544/60,lon:103+55.963/60,note:"white tower, 76 m"},
-  {id:"keta",name:"Keta beacon",lat:1+18.315/60,lon:103+58.079/60,note:"yellow pile beacon"},
-  {id:"tanahMerah",name:"Tanah Merah beacon",lat:1+18.726/60,lon:103+59.038/60,note:"beacon tower, 4 m"},
-  {id:"bedokJetty",name:"Bedok Jetty (head)",lat:1+18.313/60,lon:103+56.517/60,note:"cursor point, backup only"},
+  {id:"o0",name:"Amber Beacon",lat:1.297867,lon:103.905783,g:"A"},
+  {id:"o1",name:"Ayer Beacon",lat:1.268117,lon:103.706683,g:"B"},
+  {id:"o2",name:"Batu Kopi Beacon",lat:1.223150,lon:103.779617,g:"C"},
+  {id:"o3",name:"Bedok Lighthouse",lat:1.309067,lon:103.932750,g:"A"},
+  {id:"o4",name:"Buran Beacon",lat:1.252350,lon:103.848650,g:"C"},
+  {id:"o5",name:"Busing Beacon",lat:1.236667,lon:103.738417,g:"B"},
+  {id:"o6",name:"Changi Beacon",lat:1.319017,lon:104.034567,g:"A"},
+  {id:"o7",name:"Chombun Beacon",lat:1.291483,lon:103.694783,g:"C"},
+  {id:"o8",name:"Cyrene Beacon",lat:1.255000,lon:103.758967,g:"B"},
+  {id:"o9",name:"Esso Beacon",lat:1.284883,lon:103.698333,g:"B"},
+  {id:"o10",name:"First Bukom Beacon",lat:1.237683,lon:103.772283,g:"C"},
+  {id:"o11",name:"Frontier Beacon",lat:1.314717,lon:104.059233,g:"B"},
+  {id:"o12",name:"Gerita Beacon",lat:1.223617,lon:103.724717,g:"B"},
+  {id:"o13",name:"He-Ent Beacon",lat:1.228317,lon:103.669767,g:"B"},
+  {id:"o14",name:"Jambi West Beacon",lat:1.203067,lon:103.793617,g:"C"},
+  {id:"o15",name:"Jong Beacon",lat:1.213900,lon:103.789667,g:"C"},
+  {id:"o16",name:"Keta Beacon",lat:1.305250,lon:103.967983,g:"B"},
+  {id:"o17",name:"Kias Beacon",lat:1.232283,lon:103.845417,g:"B"},
+  {id:"o18",name:"Kukor Beacon",lat:1.240117,lon:103.849083,g:"B"},
+  {id:"o19",name:"Lube Park Front Beacon",lat:1.275083,lon:103.609850,g:"B"},
+  {id:"o20",name:"Lube Park Rear Beacon",lat:1.274900,lon:103.609783,g:"B"},
+  {id:"o21",name:"MD 0",lat:1.232083,lon:103.685217,g:"B"},
+  {id:"o22",name:"MD 21",lat:1.239167,lon:103.691417,g:"B"},
+  {id:"o23",name:"MSP 1 Beacon",lat:1.271117,lon:103.867183,g:"B"},
+  {id:"o24",name:"MSP 2 Beacon",lat:1.269967,lon:103.868017,g:"B"},
+  {id:"o25",name:"MSP 3 Beacon",lat:1.267750,lon:103.864950,g:"B"},
+  {id:"o26",name:"North Semakau Beacon",lat:1.218983,lon:103.758783,g:"B"},
+  {id:"o27",name:"North-East Semakau Beacon",lat:1.210683,lon:103.780067,g:"C"},
+  {id:"o28",name:"OTB Front Beacon",lat:1.236883,lon:103.751067,g:"C"},
+  {id:"o29",name:"OTB Rear Beacon",lat:1.236183,lon:103.750167,g:"B"},
+  {id:"o30",name:"Palawan Beacon",lat:1.249467,lon:103.814933,g:"B"},
+  {id:"o31",name:"Pandan Beacon",lat:1.257667,lon:103.742233,g:"B"},
+  {id:"o32",name:"Pauh Beacon",lat:1.222933,lon:103.749917,g:"B"},
+  {id:"o33",name:"Pempang Beacon",lat:1.228067,lon:103.740883,g:"B"},
+  {id:"o34",name:"Raffles Lighthouse",lat:1.160100,lon:103.740833,g:"A"},
+  {id:"o35",name:"Renget Beacon",lat:1.226583,lon:103.846717,g:"B"},
+  {id:"o36",name:"Retan Satu Beacon",lat:1.292800,lon:103.757000,g:"C"},
+  {id:"o37",name:"Rimau Beacon",lat:1.259900,lon:103.806567,g:"B"},
+  {id:"o38",name:"SE Buran Beacon",lat:1.237533,lon:103.841367,g:"B"},
+  {id:"o39",name:"Sakijang Beacon",lat:1.221750,lon:103.854583,g:"A"},
+  {id:"o40",name:"Selegi Beacon",lat:1.226317,lon:103.826567,g:"B"},
+  {id:"o41",name:"Semakau Light",lat:1.209783,lon:103.777617,g:"B"},
+  {id:"o42",name:"Semaphore Tower (Pulau Satumu)",lat:1.160883,lon:103.741183,g:"A"},
+  {id:"o43",name:"Sentosa Beacon",lat:1.237267,lon:103.833100,g:"B"},
+  {id:"o44",name:"Serebut Beacon",lat:1.247217,lon:103.701467,g:"B"},
+  {id:"o45",name:"Sinki Beacon",lat:1.234133,lon:103.721817,g:"B"},
+  {id:"o46",name:"South Bukom Beacon",lat:1.219883,lon:103.780683,g:"C"},
+  {id:"o47",name:"South Changi Beacon",lat:1.315200,lon:103.976750,g:"B"},
+  {id:"o48",name:"South Cyrene Beacon",lat:1.254000,lon:103.751317,g:"C"},
+  {id:"o49",name:"Sudong Beacon (Disused)",lat:1.211000,lon:103.714067,g:"B"},
+  {id:"o50",name:"Sultan Shoal Lighthouse",lat:1.239617,lon:103.648067,g:"A"},
+  {id:"o51",name:"TP1 Beacon (Jetty West End)",lat:1.278483,lon:103.643367,g:"C"},
+  {id:"o52",name:"TP2 Beacon (Jetty East End)",lat:1.279567,lon:103.649533,g:"C"},
+  {id:"o53",name:"Tanah Merah Beacon",lat:1.312100,lon:103.983967,g:"B"},
+  {id:"o54",name:"Tembakul Beacon",lat:1.222333,lon:103.862583,g:"B"},
+  {id:"o55",name:"Tuas East Beacon (Jetty East End)",lat:1.286383,lon:103.612683,g:"C"},
+  {id:"o56",name:"Tuas West Beacon (Jetty West End)",lat:1.287417,lon:103.612250,g:"C"},
+  {id:"o57",name:"Vopak 2 Beacon (P. Sebarok jetty 5)",lat:1.201200,lon:103.797850,g:"C"}
 ];
 const CARD_HDG=[0,45,90,135,180,225,270,315];
 const CARD_DEV=[-1,1,-1,1,1,-1,1,-1];
@@ -184,9 +238,27 @@ let tz="local";
 
 // populate selects
 const objSel=$("obj");
-OBJECTS.forEach(o=>objSel.add(new Option(o.name,o.id)));
-objSel.add(new Option("Other object (enter coordinates)","custom"));
-objSel.value="bedokJetty";
+let lastKey="";
+// Rebuild the object list sorted by distance from the ship; keeps the current choice.
+function rebuildList(lat,lon){
+  const key=lat===null||lon===null?"none":lat.toFixed(3)+","+lon.toFixed(3);
+  if(key===lastKey)return; lastKey=key;
+  const cur=objSel.value; objSel.innerHTML="";
+  const withD=OBJECTS.map(o=>({...o,nm:(lat===null||lon===null)?null:inv(lat,lon,o.lat,o.lon).d/1852}));
+  const groups=[["Recommended (1–6 NM)",x=>x.nm>=1&&x.nm<=6],["Too close (under 1 NM)",x=>x.nm<1],["Farther (6–12 NM)",x=>x.nm>6&&x.nm<=12]];
+  if(lat===null||lon===null){withD.sort((a,b)=>a.name.localeCompare(b.name));withD.forEach(o=>objSel.add(new Option(o.name,o.id)));}
+  else{
+    withD.sort((a,b)=>a.nm-b.nm);
+    groups.forEach(([label,f])=>{const items=withD.filter(f);if(!items.length)return;
+      const og=document.createElement("optgroup");og.label=label;
+      items.forEach(o=>og.appendChild(new Option(`${o.name} · ${o.nm.toFixed(1)} NM · ${o.g}`,o.id)));objSel.appendChild(og);});
+  }
+  objSel.add(new Option("Other object (enter coordinates)","custom"));
+  const ids=[...objSel.options].map(o=>o.value);
+  if(ids.includes(cur))objSel.value=cur;
+  else{const best=withD.filter(x=>x.nm!==null&&x.nm>=1&&x.nm<=6).sort((a,b)=>(a.g>b.g)-(a.g<b.g)||a.nm-b.nm)[0];
+    objSel.value=best?best.id:objSel.options[0].value;}
+}
 const cardBox=$("cardBox");
 CARD_HDG.forEach((h,i)=>{const l=document.createElement("label");l.textContent=String(h).padStart(3,"0")+"°";
   const inp=document.createElement("input");inp.type="number";inp.step="0.1";inp.value=CARD_DEV[i];inp.id="cd"+h;l.appendChild(inp);cardBox.appendChild(l)});
@@ -226,9 +298,6 @@ function calc(){
   const date=$("date").value,time=$("time").value;
   const latD=n($("latD").value),latM=n($("latM").value),lonD=n($("lonD").value),lonM=n($("lonM").value);
   const gH=n($("gHdg").value),mH=n($("mHdg").value),sH=n($("sHdg").value),obs=n($("obs").value);
-  const isCustom=objSel.value==="custom"; $("customBox").hidden=!isCustom;
-  let obj=OBJECTS.find(o=>o.id===objSel.value);
-  if(isCustom){const la=n($("cLat").value),lo=n($("cLon").value);obj=(la!==null&&lo!==null)?{name:$("cName").value||"Other object",lat:la,lon:lo}:null}
   const lat=(latD!==null&&latM!==null)?(latD+latM/60)*($("latH").value==="S"?-1:1):null;
   const lon=(lonD!==null&&lonM!==null)?(lonD+lonM/60)*($("lonH").value==="W"?-1:1):null;
 
@@ -244,12 +313,10 @@ function calc(){
   const yrs=dt?(dt.getUTCFullYear()+(dt-Date.UTC(dt.getUTCFullYear(),0,1))/(365.25*864e5))-vy:0;
   const variation=vb+yrs*va/60;
 
-  // objects table
-  const rows=[];
-  if(lat!==null&&lon!==null){
-    OBJECTS.forEach(o=>{const r=inv(lat,lon,o.lat,o.lon);rows.push({...o,brg:r.az,nm:r.d/1852})});
-    if(isCustom&&obj){const r=inv(lat,lon,obj.lat,obj.lon);rows.push({id:"custom",name:obj.name,note:"manual entry",brg:r.az,nm:r.d/1852})}
-  }
+  rebuildList(lat,lon);
+  const isCustom=objSel.value==="custom"; $("customBox").hidden=!isCustom;
+  let obj=OBJECTS.find(o=>o.id===objSel.value);
+  if(isCustom){const la=n($("cLat").value),lo=n($("cLon").value);obj=(la!==null&&lo!==null)?{name:$("cName").value||"Other object",lat:la,lon:lo}:null}
 
   // core
   let tb=null,dist=null;
