@@ -48,8 +48,10 @@ label{display:flex;flex-direction:column;gap:4px;font-size:.82rem;color:var(--mu
 input,select{font:inherit;font-family:var(--f-data);font-size:.92rem;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:5px;padding:7px 8px;width:100%;min-width:0}
 input:focus,select:focus,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .pos{display:grid;grid-template-columns:52px 1fr 58px;gap:6px}
-.seg{display:flex;gap:6px}
-.seg button{flex:1}
+.trow{display:flex;gap:6px;align-items:stretch}
+.trow input{flex:1}
+.seg{display:flex;flex:none;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.seg button{border:0;border-radius:0;padding:6px 9px;font-size:.8rem}
 button{font:inherit;font-family:var(--f-display);font-weight:600;font-size:.9rem;border-radius:5px;padding:7px 10px;cursor:pointer;border:1px solid var(--line);background:var(--field);color:var(--ink)}
 button.on,button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .hint{font-size:.78rem;color:var(--muted)}
@@ -94,7 +96,6 @@ table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
     <h1>Compass Error · MT TITANIA</h1>
     <div class="sub">Enter the observation; results fill the compass error book columns.</div>
   </div>
-  <span class="ex" id="exTag">EXAMPLE: 05 OCT 2026 DATA</span>
 </header>
 
 <div class="grid">
@@ -103,11 +104,7 @@ table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
     <h2>Observation</h2>
     <div class="fields">
       <label>Date<input type="date" id="date" value="2026-10-05"></label>
-      <label>Time (hh:mm)<input type="time" id="time" value="10:58"></label>
-      <div class="full seg" role="group" aria-label="Time zone">
-        <button type="button" id="tzLocal" class="on">ECDIS local time (UTC+8)</button>
-        <button type="button" id="tzUtc">Already UTC</button>
-      </div>
+      <label>Time<span class="trow"><input type="time" id="time" value="10:58"><span class="seg" role="group" aria-label="Time zone"><button type="button" id="tzLocal" class="on" title="Local time UTC+8">LT</button><button type="button" id="tzUtc" title="Universal time">UTC</button></span></span></label>
       <label class="full">Latitude
         <span class="pos"><input id="latD" type="number" min="0" max="89" value="1" aria-label="Lat degrees"><input id="latM" type="number" step="0.001" min="0" max="59.999" value="17.783" aria-label="Lat minutes"><select id="latH" aria-label="N/S"><option>N</option><option>S</option></select></span>
       </label>
@@ -164,11 +161,6 @@ table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
       <ul class="checks" id="checks"></ul>
     </section>
 
-    <section class="panel">
-      <h2>Reference points from ship</h2>
-      <div class="scroll"><table class="objs" id="objs"></table></div>
-      <p class="hint" style="margin:8px 0 0">Choose a distant, clearly visible object. Under 1 NM, a 50 m offset between GPS antenna and compass can shift the bearing by ±1.5°.</p>
-    </section>
 
     <section class="panel">
       <h2>Working</h2>
@@ -258,8 +250,6 @@ function calc(){
     OBJECTS.forEach(o=>{const r=inv(lat,lon,o.lat,o.lon);rows.push({...o,brg:r.az,nm:r.d/1852})});
     if(isCustom&&obj){const r=inv(lat,lon,obj.lat,obj.lon);rows.push({id:"custom",name:obj.name,note:"manual entry",brg:r.az,nm:r.d/1852})}
   }
-  $("objs").innerHTML="<tr><th>Object</th><th style='text-align:right'>True Brg</th><th style='text-align:right'>Distance</th><th>Status</th></tr>"+
-    rows.map(r=>`<tr class="${r.id===objSel.value?"sel":""}"><td>${r.name}<div class="hint">${r.note}</div></td><td class="num">${f3(r.brg)}°</td><td class="num">${r.nm.toFixed(2)} NM</td><td>${r.nm<1?pill("p-warn","TOO CLOSE"):r.nm>8?pill("p-warn","CHECK VISIBILITY"):pill("p-ok","GOOD")}</td></tr>`).join("");
 
   // core
   let tb=null,dist=null;
@@ -329,7 +319,7 @@ function calc(){
 
 $("tzLocal").onclick=()=>{tz="local";$("tzLocal").classList.add("on");$("tzUtc").classList.remove("on");calc()};
 $("tzUtc").onclick=()=>{tz="utc";$("tzUtc").classList.add("on");$("tzLocal").classList.remove("on");calc()};
-$("f").addEventListener("input",()=>{$("exTag").hidden=true;calc()});
+$("f").addEventListener("input",calc);
 $("f").addEventListener("change",calc);
 $("f").addEventListener("submit",e=>e.preventDefault());
 $("copyBtn").onclick=()=>{const t=$("copySrc").value;
